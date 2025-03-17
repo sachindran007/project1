@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Proposal Play Site</title>
+    <style>
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes glow {
+        0% {
+          text-shadow: 0 0 5px #00eaff;
+        }
+
+        50% {
+          text-shadow: 0 0 20px #ff0054;
+        }
+
+        100% {
+          text-shadow: 0 0 5px #00eaff;
+        }
+      }
+
+      @keyframes buttonPulse {
+        0% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.1);
+        }
+
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      @keyframes shake {
+        0% {
+          transform: translateX(0);
+        }
+
+        25% {
+          transform: translateX(-5px) rotate(-2deg);
+        }
+
+        50% {
+          transform: translateX(5px) rotate(2deg);
+        }
+
+        75% {
+          transform: translateX(-5px) rotate(-2deg);
+        }
+
+        100% {
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        background: linear-gradient(45deg, #1e1e2e, #3a0ca3, #ff0054);
+        color: white;
+        overflow-x: hidden;
+      }
+
+      /* Initial Loading Screen Styles */
+      #loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #1e1e2e;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        font-size: 3em;
+        color: white;
+        animation: fadeIn 1.5s ease-in-out;
+      }
+
+      .container {
+        max-width: 960px;
+        margin: auto;
+        padding-top: 50px;
+        text-align: center;
+        opacity: 0;
+        /* Hidden initially */
+        transform: translateY(20px);
+        transition: opacity 1s ease, transform 1s ease;
+      }
+
+      .container.loaded {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      h1 {
+        font-size: 3em;
+        animation: glow 2s infinite alternate;
+      }
+
+      nav {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 1s ease, transform 1s ease;
+      }
+
+      nav.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      nav ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      nav ul li {
+        display: inline;
+        margin: 0 15px;
+      }
+
+      nav ul li a {
+        text-decoration: none;
+        font-weight: bold;
+        color: #00eaff;
+        transition: 0.3s;
+      }
+
+      nav ul li a:hover {
+        color: #ff0054;
+      }
+
+      section {
+        padding: 40px;
+        margin: 20px auto;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+        opacity: 0;
+        /* Hidden initially */
+        transform: translateY(20px);
+        transition: opacity 1s ease, transform 1s ease;
+        display: none;
+        /* Initially hidden */
+      }
+
+      section.show {
+        opacity: 1;
+        transform: translateY(0);
+        display: block;
+        /* Only show when active */
+      }
+
+      .character-card {
+        display: inline-block;
+        margin: 10px;
+        text-align: center;
+      }
+
+      .character-card img {
+        max-width: 150px;
+        border-radius: 50%;
+        box-shadow: 0px 0px 10px #ff0054;
+        transition: transform 0.3s;
+        cursor: pointer;
+      }
+
+      .character-card img:hover {
+        transform: scale(1.1) rotate(5deg);
+      }
+
+      .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        color: black;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        z-index: 10;
+      }
+
+      .close-btn {
+        background: red;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        animation: buttonPulse 1.5s infinite;
+      }
+
+      .timeline-event {
+        text-align: left;
+      }
+
+      .argument {
+        animation: shake 0.8s infinite;
+        font-weight: bold;
+        color: #ff4040;
+      }
+
+      .dog-image {
+        max-width: 80px;
+        margin: 10px;
+        border-radius: 50%;
+        animation: spin 7s linear infinite;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">The Proposal Play Site</div>
+
+    <div class="container">
+      <h1>The Proposal Play Site</h1>
+
+      <nav>
+        <ul>
+          <li>
+            <a
+              href="#characters"
+              onclick="showSection('characters'); return false;"
+              >Characters</a
+            >
+          </li>
+          <li>
+            <a
+              href="#plot-overview"
+              onclick="showSection('plot-overview'); return false;"
+              >Plot Overview</a
+            >
+          </li>
+          <li>
+            <a
+              href="#about-author"
+              onclick="showSection('about-author'); return false;"
+              >About the Author</a
+            >
+          </li>
+          <li>
+            <a href="#credits" onclick="showSection('credits'); return false;"
+              >Credits</a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <section id="characters">
+        <h2>Characters</h2>
+        <div class="character-card" onclick="showPopup('Ivan')">
+          <img src="Andrey Lvo.jpg" alt="Ivan Lomov" />
+          <p>Ivan Lomov: A nervous landowner seeking marriage.</p>
+        </div>
+        <div class="character-card" onclick="showPopup('Natalya')">
+          <img src="natasha.jpg" alt="Natalya Stepanovna" />
+          <p>Natalya Stepanovna: A strong-willed woman.</p>
+        </div>
+        <div class="character-card" onclick="showPopup('Chubukov')">
+          <img src="Ivan Lomov.jpg" alt="Stepan Chubukov" />
+          <p>Stepan Chubukov: Natalya’s father, a cunning man.</p>
+        </div>
+      </section>
+
+      <section id="plot-overview">
+        <h2>Plot Overview</h2>
+        <div class="timeline-event">
+          <h3>
+            <b>Plot Overview of <i>The Proposal</i> by Anton Chekhov</b>
+          </h3>
+          <p>
+            Anton Chekhov’s <i>The Proposal</i> is a one-act farcical comedy
+            that humorously portrays human vanity, pride, and the absurdity of
+            arguments over trivial matters, especially in the context of
+            marriage.
+          </p>
+          <hr />
+          <h3><b>Introduction (Exposition)</b></h3>
+          <p>
+            The play is set in the rural countryside of Russia.
+            <b>Ivan Lomov</b>, a wealthy but nervous landowner, arrives at the
+            house of <b>Stepan Chubukov</b>, his neighbor. Chubukov, a cunning
+            yet friendly old man, is delighted to see him and welcomes him
+            warmly. Lomov, dressed formally, appears agitated and anxious, which
+            makes Chubukov curious about his visit. Lomov soon reveals that he
+            has come to <b>propose marriage to Natalya Stepanovna</b>,
+            Chubukov’s 25-year-old daughter. Chubukov, excited by the prospect
+            of a wealthy match for his daughter, gives his enthusiastic approval
+            and rushes to call Natalya.
+          </p>
+          <hr />
+          <h3><b>Rising Action: The Argument Over Oxen Meadows</b></h3>
+          <p>
+            When <b>Natalya enters</b>, Lomov tries to express his feelings, but
+            due to his nervousness, he gets sidetracked and mentions a disputed
+            piece of land called <span class="argument">Oxen Meadows</span>. He
+            claims the land belongs to him, but Natalya strongly disagrees,
+            insisting that it is her family's property. What starts as a polite
+            discussion soon escalates into a
+            <span class="argument">heated argument</span>. Both accuse each
+            other's ancestors of illegally claiming the land.
+            <b
+              >Chubukov joins in, siding with his daughter, and the argument
+              intensifies into a shouting match.</b
+            >
+            In the midst of the chaos,
+            <b
+              >Lomov, who suffers from heart palpitations and nervous disorders,
+              becomes extremely agitated and collapses from stress.</b
+            >
+          </p>
+          <hr />
+          <h3><b>Climax: The Dispute Over Dogs</b></h3>
+          <p>
+            Natalya, unaware of Lomov’s intention to propose, continues to argue
+            fiercely. When Chubukov finally lets slip that Lomov had actually
+            come to propose,
+            <b>Natalya panics and immediately regrets the argument.</b> She
+            insists on calling Lomov back and agrees with whatever he says.
+            However, the peace does not last long.
+            <b
+              >Lomov and Natalya start arguing again—this time about whose dog,
+              Squeezer (Natalya’s) or Guess (Lomov’s), is better.</b
+            >
+            Chubukov gets involved yet again, and the fight becomes even worse
+            than before.
+            <b>Lomov collapses again, this time seemingly unconscious.</b>
+            Natalya and Chubukov, thinking he has died, panic.
+            <img
+              src="dog.jpg"
+              alt="Funny Dog"
+              class="dog-image"
+              height="50px"
+            />
+          </p>
+          <hr />
+          <h3><b>Falling Action: The Proposal Finally Happens</b></h3>
+          <p>
+            After a few tense moments, <b>Lomov regains consciousness.</b>
+            Chubukov, desperate to settle the matter,
+            <b
+              >forces Lomov and Natalya to accept the marriage proposal without
+              any more arguments.</b
+            >
+          </p>
+          <hr />
+          <h3><b>Conclusion: A Comically Uncertain Ending</b></h3>
+          <p>
+            Even after their engagement,
+            <b>Natalya and Lomov continue arguing</b>, showing that their
+            marriage will likely be filled with similar disputes. Chubukov,
+            exhausted and frustrated, sarcastically
+            <b
+              >blesses them and asks for champagne to celebrate, though he seems
+              more relieved than happy.</b
+            >
+          </p>
+          <hr />
+          <h3>
+            <b>Themes in <i>The Proposal</i></b>
+          </h3>
+          <ol>
+            <li>
+              <b>Marriage as a Social Institution</b> – The play humorously
+              critiques how marriage is often based on financial and social
+              considerations rather than love.
+            </li>
+            <li>
+              <b>Absurdity of Human Nature</b> – The play highlights how people
+              fight over trivial matters while ignoring what is truly important.
+            </li>
+            <li>
+              <b>Ego and Pride</b> – The characters’ stubbornness and need to
+              "win" arguments overshadow their original intentions.
+            </li>
+          </ol>
+          <hr />
+          <h3><b>Final Thoughts</b></h3>
+          <p>
+            Despite being a short one-act play, <i>The Proposal</i> is a
+            masterpiece of comic drama,
+            <b
+              >filled with irony, exaggerated conflicts, and satirical social
+              commentary.</b
+            >
+            The play ultimately shows that human beings often
+            <b>prioritize their pride over relationships</b>, even in something
+            as significant as marriage.
+          </p>
+        </div>
+      </section>
+
+      <section id="about-author">
+        <h2>About the Author</h2>
+        <div class="character-card">
+          <img src="Anton Chekov author.jpg" alt="Anton Chekhov" />
+          <p>
+            Anton Chekhov, a Russian playwright and short-story writer, is known
+            for his masterful character-driven narratives and exploration of
+            human nature.
+          </p>
+        </div>
+      </section>
+
+      <section id="credits">
+        <h2>Credits</h2>
+        <p>
+          Contributors: Web Developer:Sachin,Gurudev <br />
+          Designers: Sachin, Logan <br />
+          Content Writers: Gurudev <br />
+        </p>
+      </section>
+    </div>
+
+    <div id="popup" class="popup">
+      <button class="close-btn" onclick="closePopup()">Close</button>
+      <p id="popup-content"></p>
+    </div>
+
+    <script>
+      // Loading Screen and Initial Display
+      window.addEventListener("load", () => {
+        const loadingScreen = document.getElementById("loading-screen");
+        const container = document.querySelector(".container");
+        const nav = document.querySelector("nav");
+
+        // Fade out loading screen
+        loadingScreen.style.transition = "opacity 1s ease";
+        loadingScreen.style.opacity = "0";
+        setTimeout(() => {
+          loadingScreen.style.display = "none";
+          container.classList.add("loaded");
+
+          // Show the navigation
+          nav.classList.add("show");
+        }, 1000);
+      });
+
+      // Show Section
+      function showSection(sectionId) {
+        // Hide all sections
+        const sections = document.querySelectorAll("section");
+        sections.forEach((section) => {
+          section.classList.remove("show");
+        });
+
+        // Show the selected section
+        const selectedSection = document.getElementById(sectionId);
+        if (selectedSection) {
+          selectedSection.classList.add("show");
+        }
+      }
+
+      // Character Popup
+      function showPopup(character) {
+        let content = {
+          Ivan: " Ivan Lomov\nPersonality: Lomov is a wealthy but extremely nervous and hypochondriac landowner. He is highly sensitive, quick to argue, and suffers from various imagined illnesses.\nRole in the Play: He visits Chubukov’s house to propose to Natalya, but instead of confessing his love, he gets into constant arguments with her.\nKey Traits: Nervous, insecure, argumentative, and anxious.\nNotable Behavior: He struggles to express his feelings and instead engages in petty disputes, even though he genuinely wishes to marry Natalya.",
+          Natalya:
+            "Natalya Stepanovna \nPersonality: Natalya is a young, strong-willed, and argumentative woman. She is intelligent but often stubborn and quick to react emotionally. Role in the Play: She is the daughter of Stepan Chubukov and the potential bride of Ivan Lomov. Though she argues fiercely over trivial matters, she is eager to marry Lomov when she learns about his proposal.\nKey Traits: Assertive, emotional, quarrelsome but also romantic when needed.\nNotable Behavior: She engages in heated arguments with Lomov over land and dogs but immediately changes her attitude when she learns about his proposal..",
+          Chubukov:
+            "Stepan Chubukov, Natalya’s father, is a cunning old man who wants his daughter to marry well.\nPersonality: Chubukov is a cunning and diplomatic man who outwardly appears friendly but is primarily interested in social and financial gains.\nRole in the Play: He is Natalya’s father and initially welcomes Lomov warmly. However, he quickly joins in the arguments and insults Lomov, despite wanting him as a son-in-law.\nKey Traits: Opportunistic, short-tempered, hypocritical but practical.\nNotable Behavior: He first supports Lomov’s marriage proposal but later insults him, only to hurriedly approve the wedding when Natalya insists.",
+        };
+        document.getElementById("popup-content").innerText = content[character];
+        document.getElementById("popup").style.display = "block";
+      }
+      function closePopup() {
+        document.getElementById("popup").style.display = "none";
+      }
+    </script>
+  </body>
+</html>
